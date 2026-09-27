@@ -115,7 +115,7 @@ def perform_func(code_work: int, code_subwork: int) -> None:
         },
         3: {
             1: grade_features.add_grade,
-            2: None,
+            2: grade_features.delete_grade,
             3: grade_features.edit_grade,
             4: grade_features.search_grade,
         },
