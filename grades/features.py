@@ -1,7 +1,7 @@
 from database.Database import Database
 from grades.tools import search_one_record, TABLE_SBJ, TABLE_STD, check_grade
 from subjects.features import search_subject
-from tools.func import table
+from tools.func import table, check_number_greater_zero
 
 # variables
 grade = Database("database.sqlite3")
@@ -188,4 +188,36 @@ def edit_grade() -> int:
 
     except:
         print("Editing the grade Failed ... !")
+        return 0
+
+
+# delete the grade of a student or specific subject
+def delete_grade() -> int:
+    "delete the grade of a student or specific subject"
+
+    # search for the grade
+    search_grade()
+
+    # choice a grade to delete
+    grade_id = 0
+    while True:
+        try:
+            grade_id = int(input("Enter the ID of grade for delete : "))
+
+            if check_number_greater_zero(grade_id, True):
+                break
+            else:
+                print("Entered ID is not valid ... !")
+        except:
+            print("Enter the ID as number ... !")
+
+    # try to delete the grade
+    try:
+        grade.Get_Query(f"DELETE FROM grades WHERE id={grade_id}")
+
+        print("The grade Successfuly deleted ... !")
+        return 1
+
+    except:
+        print("Deleting the grade Failed ... !")
         return 0
