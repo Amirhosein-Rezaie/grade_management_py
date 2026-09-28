@@ -146,3 +146,39 @@ def search_student() -> None:
 
     # show the data of student in a table
     table(data, columns)
+
+
+# show average of one student
+def average_student_in_subjects() -> None:
+    "show average of one student"
+
+    # get input national code of student
+    code = input("Enter the national code of student : ")
+
+    # get grades and show
+    datas = []
+    try:
+        datas = student.Get_Query(
+            f"""
+            SELECT grades.id, students.firstname || ' ' || students.lastname, subjects.title DISTINC, grades.grade
+            FROM students, grades, subjects
+            WHERE (students.code={code}) AND students.id=grades.student_id AND subjects.id=grades.subject_id
+            """,
+            fetch_result=True,
+        )
+    except:
+        print("Searching for student and the grades Failed ... !")
+        return 0
+
+    table(datas, ["student", "subject", "grade"], False)
+
+    # calculate the average of grades
+    try:
+        grades = [data[3] for data in datas]
+
+        print("The average of grades : " + str(sum(grades) / len(grades)))
+        return 1
+
+    except:
+        print("Calculating of average the grades Failed ... !")
+        return 0
