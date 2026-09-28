@@ -119,7 +119,9 @@ def perform_func(code_work: int, code_subwork: int) -> None:
             3: grade_features.edit_grade,
             4: grade_features.search_grade,
         },
-        4: {},
+        4: {
+            1: student_features.average_student_in_subjects,
+        },
     }
 
     splitter_line()
