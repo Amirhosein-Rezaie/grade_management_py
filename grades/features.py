@@ -88,10 +88,15 @@ def search_grade() -> int:
     # variables
     global grade
     ids = {"student": 0, "subject": 0}
+    flag_show_all = False
 
     # get student and subject code for search the IDs
     while True:
-        search = input("Enter the student or subject code (exp: code): ")
+        search = input("Enter the student or subject code (exp: code, 0: show all): ")
+
+        if search == "0":
+            flag_show_all = True
+            break
 
         # try to search IDs
         try:
@@ -115,16 +120,29 @@ def search_grade() -> int:
             print("Searching for student or subject Failed  ... !")
 
     # try to find the grades of the student or specific subject
+    query = ""
+
+    if flag_show_all:
+        query = f"""
+                SELECT grades.id, grades.grade,
+                students.firstname || ' ' || students.lastname as student_name,
+                subjects.title
+                FROM grades, students, subjects
+                WHERE grades.student_id=students.id AND grades.subject_id=subjects.id
+                """
+    else:
+        query = f"""
+                SELECT grades.id, grades.grade,
+                students.firstname || ' ' || students.lastname as student_name,
+                subjects.title
+                FROM grades, students, subjects
+                WHERE (grades.student_id={ids['student']} OR grades.subject_id={ids['subject']})
+                AND grades.student_id=students.id AND grades.subject_id=subjects.id
+                """
+
     try:
         data = grade.Get_Query(
-            f"""
-            SELECT grades.id, grades.grade,
-            students.firstname || ' ' || students.lastname as student_name,
-            subjects.title
-            FROM grades, students, subjects
-            WHERE (grades.student_id={ids['student']} OR grades.subject_id={ids['subject']})
-            AND grades.student_id=students.id AND grades.subject_id=subjects.id
-            """,
+            query,
             fetch_result=True,
         )
 
